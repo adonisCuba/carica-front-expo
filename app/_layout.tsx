@@ -16,6 +16,7 @@ export default function RootLayout() {
           <Stack.Screen name="driver" options={{ headerShown: false }} /> {/* Layout para tabs */}
           <Stack.Screen name="loader" options={{ headerShown: false }} /> {/* Layout para auth */}
           <Stack.Screen name="createLoad" options={{ header: () => <CustomHeader hasBack={true} /> }} /> {/* Layout para auth */}
+          <Stack.Screen name='subscribeModal' options={{presentation: 'modal'}} />
         </Stack>
       </SafeAreaView>
     </Provider>

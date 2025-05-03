@@ -5,14 +5,14 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "carica",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.devjoseale.carica"
     },
-    "android": { 
+    "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -39,8 +39,9 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      ["@react-native-google-signin/google-signin" ],
-
+      [
+        "@react-native-google-signin/google-signin"
+      ],
       [
         "expo-location",
         {
@@ -56,7 +57,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "d81e6714-1264-47cd-a724-e5e75c44571c"
+        "projectId": "bdaec401-c12e-451a-85f1-78c3c4efe8ad"
       }
     }
   }

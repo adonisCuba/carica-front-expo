@@ -64,6 +64,7 @@ export default function StartRoute() {
 
   useEffect(() => {
     // Solo redirigir después de haber resuelto el estado inicial
+    console.log('Role:', role)
     if (!loading) {
       switch (role) {
         case 'driver':

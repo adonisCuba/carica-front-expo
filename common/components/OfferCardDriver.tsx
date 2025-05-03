@@ -52,7 +52,6 @@ const OfferCardDriver = ({ load }: OfferCardDriverProps) => {
          load={load}
           openModal={openModal}
           toggleModal={toggleModal}
-
         />
       </View>
     </View>

@@ -126,9 +126,9 @@ export const createCheckoutPreference = async () => {
         plan_id: '2c938084963245b70196413ba7440903', // Especifica el ID del plan aquí
         auto_return: 'approved', // Opcional: Redirige automáticamente en caso de éxito
         back_urls: {
-          success: 'TU_ESQUEMA_DE_URL://success', // Define un esquema de URL para tu app
-          failure: 'TU_ESQUEMA_DE_URL://failure',
-          pending: 'TU_ESQUEMA_DE_URL://pending',
+          success: 'carica://success', // Define un esquema de URL para tu app
+          failure: 'carica://failure',
+          pending: 'carica://pending',
         },
       }),
     });
@@ -136,7 +136,8 @@ export const createCheckoutPreference = async () => {
     if (response.ok) {
       const data = await response.json();
       console.log('Preferencia creada:', data);
-      return data.init_point;
+      return data.sandbox_init_point;
+      // return data.init_point;
     } else {
       const errorData = await response.json();
       Alert.alert('Error al crear la preferencia', errorData.message || 'Inténtalo de nuevo.');

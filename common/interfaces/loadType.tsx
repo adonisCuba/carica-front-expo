@@ -91,7 +91,8 @@ export interface LoadSupabaseUnit {
     ubicacionfinal_id:    string;
     ubicacioninicial_id: string;
     valorviaje:          string;
-    tipo_equipo: string
+    tipo_equipo: string;
+    email: string;
 }
 export interface LoadSupabaseResponse{
     data: LoadSupabaseUnit[];
@@ -117,4 +118,5 @@ export interface Load{
     telefonoDador: string;
     puntoReferencia: string;
     tipoEquipo: string;
+    email: string;
 }

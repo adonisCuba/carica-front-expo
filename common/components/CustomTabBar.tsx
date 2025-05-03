@@ -26,29 +26,28 @@ const CustomNavBar: React.FC<BottomTabBarProps> = ({
   descriptors,
   navigation,
 }) => {
-  const {isSubscribed} = useSelector((state:RootState) => state.subscribed)
+  const { isSubscribed } = useSelector((state: RootState) => state.subscribed);
 
-  const [isDriver, setIsDriver] = useState(false)
+  const [rolName, setRolName] = useState("driver");
   useEffect(() => {
-    const getUser = async ( ) =>{
-      const user = await supabase.auth.getUser()
+    const getUser = async () => {
+      const user = await supabase.auth.getUser();
       console.log(user.data.user?.user_metadata.rol_nombre);
-      setIsDriver( user.data.user?.user_metadata.rol_nombre);
-    }
-   getUser()
-
-  }, [])
-  
+      setRolName(user.data.user?.user_metadata.rol_nombre);
+    };
+    getUser();
+  }, []);
 
   return (
     <View style={styles.container}>
-     { !isSubscribed && isDriver === 'driver' && <CallToSuscribePanel width={"90%"}/>}
+      {!isSubscribed && rolName === "driver" && (
+        <CallToSuscribePanel width={"90%"} />
+      )}
       {state.routes.map((route, index) => {
         if (["_sitemap", "+not-found"].includes(route.name)) return null;
 
         const { options } = descriptors[route.key];
-        const label =
-          options.tabBarLabel
+        const label = options.tabBarLabel;
 
         const isFocused = state.index === index;
 
@@ -101,8 +100,8 @@ const CustomNavBar: React.FC<BottomTabBarProps> = ({
         return <Ionicons name="add-circle" size={26} color={color} />;
       case "carrierProfile":
         return <Ionicons name="person" size={26} color={color} />;
-        case "offerScreen":
-          return <Ionicons name="home" size={26} color={color} />;
+      case "offerScreen":
+        return <Ionicons name="home" size={26} color={color} />;
       case "createTruck":
         return <Ionicons name="bus" size={26} color={color} />;
       case "offerTrucks":

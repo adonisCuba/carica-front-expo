@@ -11,7 +11,6 @@ const validationLoadSchema = Yup.object().shape({
     .required('El peso es obligatorio.')
     .trim(),
   tipoEquipo: Yup.string()
-    .required('El tipo de equipo es obligatorio.')
     .trim(),
   localidadCarga: Yup.string()
     .required('La localidad de carga es obligatoria.')
