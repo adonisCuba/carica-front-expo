@@ -397,6 +397,7 @@ export type Database = {
           nombre: string
           rol_id: number | null
           telefono: string
+          mp_subscription_id: string | null
         }
         Insert: {
           apellido: string
@@ -408,6 +409,7 @@ export type Database = {
           nombre: string
           rol_id?: number | null
           telefono: string
+          mp_subscription_id: string | null
         }
         Update: {
           apellido?: string
@@ -419,6 +421,7 @@ export type Database = {
           nombre?: string
           rol_id?: number | null
           telefono?: string
+          mp_subscription_id?: string
         }
         Relationships: [
           {

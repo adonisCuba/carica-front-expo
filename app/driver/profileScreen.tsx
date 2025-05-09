@@ -124,103 +124,105 @@ export default function ProfileScreen() {
               DNI: {profile.dni}{" "}
             </Text>
           </View>
-          <View
-            style={{
-              marginTop: 20,
-              borderWidth: 2,
-              borderColor: "#CDCDCD",
-              width: "95%",
-              height: 160,
-              borderRadius: 20,
-              marginBottom: 10,
-              backgroundColor: APPCOLORS.clearBackground,
-              flexDirection: "column",
-            }}
-          >
-            {/* CARD De suscripcion */}
-            <View>
-              <Image
-                style={{
-                  height: 80,
-                  width: 80,
-                  alignSelf: "center",
-                }}
-                source={require("../../assets/images/tdc.png")}
-              />
-            </View>
+          {!isSubscribed && (
             <View
               style={{
+                marginTop: 20,
+                borderWidth: 2,
+                borderColor: "#CDCDCD",
+                width: "95%",
+                height: 160,
+                borderRadius: 20,
+                marginBottom: 10,
+                backgroundColor: APPCOLORS.clearBackground,
                 flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
               }}
             >
-              <Text
-                style={{
-                  fontSize: 15,
-                  color: APPCOLORS.primary,
-                  fontWeight: "600",
-                  textAlign: "center",
-                }}
-              >
-                {" "}
-                Necesitas suscribirte para ver Ofertas{" "}
-              </Text>
-            </View>
-            <TouchableOpacity
-              onPress={_handlePressButtonAsync}
-              style={{
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                marginTop: 6,
-              }}
-              activeOpacity={0.8}
-            >
+              {/* CARD De suscripcion */}
+              <View>
+                <Image
+                  style={{
+                    height: 80,
+                    width: 80,
+                    alignSelf: "center",
+                  }}
+                  source={require("../../assets/images/tdc.png")}
+                />
+              </View>
               <View
                 style={{
-                  width: "90%",
-                  flexDirection: "row",
+                  flexDirection: "column",
                   justifyContent: "center",
                   alignItems: "center",
-                  height: 40,
-                  backgroundColor: APPCOLORS.primary,
-                  borderRadius: 12,
-                  borderColor: APPCOLORS.secondary,
-                  borderWidth: 2,
                 }}
               >
                 <Text
                   style={{
-                    fontSize: 20,
-                    color: APPCOLORS.textWhite,
+                    fontSize: 15,
+                    color: APPCOLORS.primary,
                     fontWeight: "600",
                     textAlign: "center",
                   }}
                 >
-                  Suscribirme
+                  {" "}
+                  Necesitas suscribirte para ver Ofertas{" "}
                 </Text>
               </View>
-            </TouchableOpacity>
-          </View>
-          <View style={{ width: "100%", marginBottom: 30 }}>
-            <TouchableOpacity
-              onPress={logout}
-              style={{
-                borderRadius: 30,
-                backgroundColor: "red",
-                width: "100%",
-                height: 50,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Text style={{ color: "white", fontWeight: "600" }}>
-                Cerrar Sesión
-              </Text>
-            </TouchableOpacity>
-          </View>
+              <TouchableOpacity
+                onPress={_handlePressButtonAsync}
+                style={{
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginTop: 6,
+                }}
+                activeOpacity={0.8}
+              >
+                <View
+                  style={{
+                    width: "90%",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: 40,
+                    backgroundColor: APPCOLORS.primary,
+                    borderRadius: 12,
+                    borderColor: APPCOLORS.secondary,
+                    borderWidth: 2,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      color: APPCOLORS.textWhite,
+                      fontWeight: "600",
+                      textAlign: "center",
+                    }}
+                  >
+                    Suscribirme
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          )}
         </ScrollView>
+        <View style={{ width: "100%", marginBottom: 30 }}>
+          <TouchableOpacity
+            onPress={logout}
+            style={{
+              borderRadius: 30,
+              backgroundColor: "red",
+              width: "100%",
+              height: 50,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ color: "white", fontWeight: "600" }}>
+              Cerrar Sesión
+            </Text>
+          </TouchableOpacity>
+        </View>
         <View style={{ height: 70 }} />
       </ScreenLayout>
       <DriverProfileModal

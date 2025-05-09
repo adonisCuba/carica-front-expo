@@ -1,25 +1,42 @@
-import { createCheckoutPreference } from "@/common/utils/integracionMP";
+import {
+  checkPaymentStatus,
+  createCheckoutPreference,
+} from "@/common/utils/integracionMP";
 import { TouchableOpacity } from "react-native";
 import { Image, StyleSheet, Text, View } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { APPCOLORS } from "@/common/utils/colors";
 import { router } from "expo-router";
+import { supabase } from "@/lib/supabase";
+import { updateSubscription } from "@/common/supabase/users/fetchUser";
 
 export default function SubscribeModal() {
   const onSubscribePress = async () => {
     try {
       const data = await createCheckoutPreference();
-      let result = await WebBrowser.openBrowserAsync(data);
-      console.log("DATA", result);
-      console.log("RESULTADO:", result);
+      await WebBrowser.openBrowserAsync(data.init_point);
+      const result = await checkPaymentStatus(data.id);
+      if (
+        result.status === "approved" ||
+        result.status === "in_process" ||
+        result.status === "authorized"
+      ) {
+        const user = await supabase.auth.getUser();
+        await updateSubscription(user.data.user!.id, true, data.id);
+      }
     } catch (error) {
       console.log(error);
     }
   };
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={{ position: "absolute", top: 5, right: 5 }} onPress={() => {router.dismiss()}}>
+      <TouchableOpacity
+        style={{ position: "absolute", top: 5, right: 5 }}
+        onPress={() => {
+          router.dismiss();
+        }}
+      >
         <Ionicons name="close" size={28} color={APPCOLORS.darkGray} />
       </TouchableOpacity>
       <Image
