@@ -22,6 +22,7 @@ import { integracionMP } from "@/common/utils/integracionMP";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import { createCheckoutPreference } from "@/common/utils/integracionMP";
+import SubscribeModal from "@/common/components/subscribeModal";
 
 //TODO Cambiar por url de perfil de supabase
 const AVATAR_URL: string =
@@ -30,6 +31,7 @@ export default function ProfileScreen() {
   const [openModal, setOpenModal] = useState(false);
   const [profile, setProfile] = useState<any>({});
   const { isSubscribed } = useSelector((state: RootState) => state.subscribed);
+  const [subscribeModal, setSubscribeModal] = useState(false);
 
   const toggleModal = () => {
     setOpenModal(!openModal);
@@ -58,7 +60,7 @@ export default function ProfileScreen() {
     setProfile(profileData);
   };
   const _handlePressButtonAsync = async () => {
-    router.push({ pathname: "/subscribeModal" });
+    setSubscribeModal(true);
   };
   return (
     <View
@@ -205,30 +207,35 @@ export default function ProfileScreen() {
               </TouchableOpacity>
             </View>
           )}
+          <View style={{ width: "100%" }}>
+            <TouchableOpacity
+              onPress={logout}
+              style={{
+                borderRadius: 30,
+                backgroundColor: "red",
+                width: "100%",
+                height: 50,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text style={{ color: "white", fontWeight: "600" }}>
+                Cerrar Sesión
+              </Text>
+            </TouchableOpacity>
+          </View>
         </ScrollView>
-        <View style={{ width: "100%", marginBottom: 30 }}>
-          <TouchableOpacity
-            onPress={logout}
-            style={{
-              borderRadius: 30,
-              backgroundColor: "red",
-              width: "100%",
-              height: 50,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Text style={{ color: "white", fontWeight: "600" }}>
-              Cerrar Sesión
-            </Text>
-          </TouchableOpacity>
-        </View>
+
         <View style={{ height: 70 }} />
       </ScreenLayout>
       <DriverProfileModal
         openModal={openModal}
         toggleModal={toggleModal}
         user={profile}
+      />
+      <SubscribeModal
+        openModal={subscribeModal}
+        toggleModal={() => setSubscribeModal(!subscribeModal)}
       />
     </View>
   );

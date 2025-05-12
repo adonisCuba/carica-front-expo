@@ -107,7 +107,7 @@ export const createLoad = async (load: any) =>{
             puntoreferencia: puntoReferencia || " ",
             material_id: material,
             presentacion_id: getLoadUnitIdFromString(tipoCarga)!,
-            valorviaje: precio.toString() ?? " ",
+            valorviaje: precio ? precio.toString() ?? " ": '',
             pagopor: 'Otros',
             otropagopor: null,
             fechacarga: formatDate(fechaCarga),

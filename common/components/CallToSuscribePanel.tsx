@@ -1,10 +1,12 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { router } from "expo-router";
+import SubscribeModal from "./subscribeModal";
 
 const CallToSuscribePanel = ({ width }: { width: any }) => {
+  const [openModal, setOpenModal] = useState(false);
   const _handlePressButtonAsync = async () => {
-    router.push({ pathname: "/subscribeModal" });
+    setOpenModal(true);
   };
 
   return (
@@ -33,6 +35,10 @@ const CallToSuscribePanel = ({ width }: { width: any }) => {
           Suscribete para tener acceso a toda la app
         </Text>
       </TouchableOpacity>
+      <SubscribeModal
+        openModal={openModal}
+        toggleModal={() => setOpenModal(!openModal)}
+      />
     </View>
   );
 };
