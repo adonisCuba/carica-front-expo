@@ -38,14 +38,15 @@ export default function StartRoute() {
           userData?.isSuscribed === true &&
           userData?.mp_subscription_id !== null
         ) {
-          const result = await checkPaymentStatus(userData?.mp_subscription_id);
-          if (result.status === "approved" || result.status === "authorized") {
-            await evaluateASKeys(
-              "isSuscribed",
-              JSON.stringify(ASValue),
-              dispatch(setSubscritionInfo(ASValue!))
-            );
-          }
+          dispatch(setSubscritionInfo(ASValue!))
+          // const result = await checkPaymentStatus(userData?.mp_subscription_id);
+          // if (result.status === "approved" || result.status === "authorized") {
+          //   await evaluateASKeys(
+          //     "isSuscribed",
+          //     JSON.stringify(ASValue),
+          //     dispatch(setSubscritionInfo(ASValue!))
+          //   );
+          // }
         }
 
         if (error) {

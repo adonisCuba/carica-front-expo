@@ -8,8 +8,7 @@ import * as WebBrowser from "expo-web-browser";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { APPCOLORS } from "@/common/utils/colors";
 import { router } from "expo-router";
-import { supabase } from "@/lib/supabase";
-import { updateSubscription } from "@/common/supabase/users/fetchUser";
+
 import { Modal } from "react-native";
 
 interface CustomModalProps {
@@ -26,14 +25,7 @@ export default function SubscribeModal({
       const data = await createCheckoutPreference();
       await WebBrowser.openBrowserAsync(data.init_point);
       const result = await checkPaymentStatus(data.id);
-      // if (
-      //   result.status === "approved" ||
-      //   result.status === "in_process" ||
-      //   result.status === "authorized"
-      // ) {
-        const user = await supabase.auth.getUser();
-        await updateSubscription(user.data.user!.id, true, data.id);
-      // }
+      
       toggleModal();
     } catch (error) {
       console.log(error);

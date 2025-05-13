@@ -126,9 +126,9 @@ export const createCheckoutPreference = async () => {
           plan_id: "2c938084963245b70196413ba7440903", // Especifica el ID del plan aquí
           auto_return: "approved", // Opcional: Redirige automáticamente en caso de éxito
           back_urls: {
-            success: "carica://success", // Define un esquema de URL para tu app
-            failure: "carica://failure",
-            pending: "carica://pending",
+            success: "carica://payment/success", // Define un esquema de URL para tu app
+            failure: "carica://payment/failure",
+            pending: "carica://payment/pending",
           },
         }),
       }
