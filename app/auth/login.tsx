@@ -8,10 +8,6 @@ import useCustomAuth  from './hooks/useCustomAuth';
 import * as Location from 'expo-location';
 import { useDeviceLocation } from '@/hooks/useDeviceLocation';
 
-
-
-
-
 export default function LoginScreen() {
   const { 
     location,

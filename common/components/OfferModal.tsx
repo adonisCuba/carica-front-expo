@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Modal, ModalProps, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Button, Modal, ModalProps, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { APPCOLORS } from '../utils/colors';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { ActionsButton } from '../utils/actionsButton';
@@ -16,9 +16,10 @@ export const OfferModal =  ({ openModal, toggleModal, load }: CustomModalProps) 
 
   return (
     <Modal visible={openModal} transparent={true} animationType='slide' style={{ flex: 1, width: '100%' }}>
-      <View style={{ flex: 1, justifyContent: 'center', }}>
+      <ScrollView contentContainerStyle={{ flex: 1, justifyContent: 'center', }}>
         <View style={styles.container}>
-          <Text style={[styles.modalTitle, { textAlign: 'center', fontSize: 30, marginBottom: 30, marginTop: 20 }]}>Oferta: </Text>
+          <Ionicons name='close' size={30} color={APPCOLORS.primary} style={{ position: 'absolute', top: 10, right: 10 }} onPress={toggleModal} />
+          <Text style={[styles.modalTitle, { textAlign: 'center', fontSize: 30, marginBottom: 10 }]}>Oferta: </Text>
           <View>
             {/* Informacion de la carga - izquierda*/}
             <TextContainer title='Material: ' subtitle={load.material} />
@@ -31,12 +32,12 @@ export const OfferModal =  ({ openModal, toggleModal, load }: CustomModalProps) 
 
           </View>
           {/* Botones accion */}
-          <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 30, marginTop:15, gap:30, marginRight: 20 }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 10, marginTop:10, gap:30, marginRight: 20 }}>
 
             <View style={{ flexDirection: 'column', justifyContent: 'space-evenly',  }}>
               <Pressable
                 style={styles.filterBtn}
-                onPress={()=> ActionsButton.actionWhatsappButton('123456789')}>
+                onPress={()=> ActionsButton.actionWhatsappButton(load.telefonoDador)}>
                 <Ionicons name='logo-whatsapp' size={40} color={APPCOLORS.clearBackground} />
                 <Text style={{ color: APPCOLORS.textWhite }}>Whatsapp</Text>
               </Pressable>
@@ -44,14 +45,14 @@ export const OfferModal =  ({ openModal, toggleModal, load }: CustomModalProps) 
             <View style={{ flexDirection: 'column', justifyContent: 'center', }}>
               <Pressable
                 style={styles.filterBtn2}
-                onPress={()=> ActionsButton.actionCallButton('123456789')}>
+                onPress={()=> ActionsButton.actionCallButton(load.telefonoDador)}>
                 <Ionicons name='call' size={40} color={APPCOLORS.clearBackground} />
                 <Text style={{ color: APPCOLORS.textWhite }}>Llamar</Text>
               </Pressable>
             </View>
           </View>
           {/* Boton cerrar */}
-          <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginBottom: 30, marginRight: 15 }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginRight: 15 }}>
             <Pressable
               style={styles.filterBtnCancel}
               onPress={toggleModal}>
@@ -59,7 +60,7 @@ export const OfferModal =  ({ openModal, toggleModal, load }: CustomModalProps) 
             </Pressable>
           </View>
         </View>
-      </View>
+      </ScrollView>
     </Modal>
   )
 }
@@ -84,37 +85,34 @@ const styles = StyleSheet.create({
     elevation: 40,
     backgroundColor: '#ffffff',
     padding: 20,
-    height: '90%',
     borderRadius: 30,
     borderWidth: 4,
     borderColor: APPCOLORS.secondary,
-    margin: 20,
+    marginHorizontal: 10,
   },
   modalTitle: {
     marginHorizontal: 5,
-
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: 'bold',
     color: APPCOLORS.primary
   },
   modalSubtitle: {
     marginHorizontal: 15,
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
     color: APPCOLORS.cuaternary
   },
   textContainer: {
     backgroundColor: 'white',
-    padding: 5,
+    padding: 3,
     borderRadius: 12,
-    marginHorizontal: 10,
+    marginHorizontal: 5,
     marginBottom: 8,
     justifyContent: 'center',
     alignContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
     width: '100%',
-    height: 60,
     borderWidth: 1,
     borderColor: APPCOLORS.primary
   },
