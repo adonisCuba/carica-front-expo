@@ -59,3 +59,32 @@ export const updateSubscription = async (
     Alert.alert("Error", error.message);
   }
 };
+
+export const checkSubscription = async (userID: string) => {
+    const { data: userData, error: UserError } = await supabase
+      .from("usuarios")
+      .select()
+      .eq("id", userID)
+      .maybeSingle();
+    const ASValue = userData?.isSuscribed;
+    console.log(ASValue === null);
+
+    // const subsData = await AsyncStorage.setItem('isSuscribed', JSON.stringify(userData?.isSuscribed)) ?? false
+    // dispatch(setSubscritionInfo(subsData))
+    if (
+      userData?.isSuscribed === true &&
+      userData?.mp_subscription_id !== null
+    ) {
+      return ASValue!;
+      dispatch(setSubscritionInfo(ASValue!));
+      // const result = await checkPaymentStatus(userData?.mp_subscription_id);
+      // if (result.status === "approved" || result.status === "authorized") {
+      //   await evaluateASKeys(
+      //     "isSuscribed",
+      //     JSON.stringify(ASValue),
+      //     dispatch(setSubscritionInfo(ASValue!))
+      //   );
+      // }
+    }
+    return false;
+  };
