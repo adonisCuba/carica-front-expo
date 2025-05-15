@@ -158,7 +158,7 @@ export const loadsMapper = async (
       fechaCarga: carga.fechacarga,
       fechaDescarga: carga.fechadescarga,
       valorViaje: carga.valorviaje,
-      telefonoDador: dador.telefono,
+      telefonoDador: carga.telefonodador,
       pagoPor: carga.pagopor,
       otroPagoPor: carga.otropagopor,
       tipoEquipo: tipoEquipo?.descripcion,
