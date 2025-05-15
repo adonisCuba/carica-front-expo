@@ -5,7 +5,7 @@ export class ActionsButton {
 
     public static async actionCallButton(number: string) {
         try {
-            const supported = await Linking.canOpenURL(`tel:+${number}`);
+            const supported = await Linking.canOpenURL(`tel:${number}`);
 
             if (!supported) {
                 Alert.alert('No se puede realizar llamado en este momento')
@@ -20,7 +20,7 @@ export class ActionsButton {
 
     public static async actionWhatsappButton(number: string) {
         try {
-            const supported = await Linking.canOpenURL(`https://wa.me/${number}`);
+            const supported = await Linking.canOpenURL(`whatsapp://send?phone=${number}`);
 
             if (!supported) {
                 Alert.alert('No se puede dirigir a whatsapp en este momento')
