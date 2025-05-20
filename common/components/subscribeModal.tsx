@@ -1,5 +1,4 @@
 import {
-  checkPaymentStatus,
   createCheckoutPreference,
 } from "@/common/utils/integracionMP";
 import { TouchableOpacity } from "react-native";
@@ -7,7 +6,6 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { APPCOLORS } from "@/common/utils/colors";
-import { router } from "expo-router";
 
 import { Modal } from "react-native";
 
@@ -24,8 +22,6 @@ export default function SubscribeModal({
     try {
       const data = await createCheckoutPreference();
       await WebBrowser.openBrowserAsync(data.init_point);
-      const result = await checkPaymentStatus(data.id);
-      
       toggleModal();
     } catch (error) {
       console.log(error);
@@ -47,13 +43,13 @@ export default function SubscribeModal({
             resizeMode="contain"
           />
           <Text style={styles.title}>
-            *¡Transforma cada viaje en una oportunidad!*
+            ¡Transforma cada viaje en una oportunidad!
           </Text>
           <Text style={{ textAlign: "justify", fontSize: 14 }}>
             Con{" "}
             <Text style={{ fontWeight: "bold" }}>
-              *CARICA, tu camión nunca volverá vacío. Accede a cargas exclusivas
-              en todo el país por solo **15,000 ARS*
+              CARICA, tu camión nunca volverá vacío. Accede a cargas exclusivas
+              en todo el país por solo 15,000 ARS
             </Text>
             . Aprovecha esta oportunidad para maximizar tus ingresos y optimizar
             tus recorridos.

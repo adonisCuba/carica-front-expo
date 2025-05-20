@@ -4,8 +4,6 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
-  Modal,
-  Button,
   ScrollView,
 } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
@@ -13,15 +11,11 @@ import CustomHeader from "@/common/components/Header";
 import { useNavigation, useRouter } from "expo-router";
 import ScreenLayout from "@/common/components/ScreenLayout";
 import { APPCOLORS } from "@/common/utils/colors";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { supabase } from "@/lib/supabase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DriverProfileModal } from "@/common/components/DriverProfileModal";
-import * as WebBrowser from "expo-web-browser";
-import { integracionMP } from "@/common/utils/integracionMP";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
-import { createCheckoutPreference } from "@/common/utils/integracionMP";
 import SubscribeModal from "@/common/components/subscribeModal";
 
 //TODO Cambiar por url de perfil de supabase

@@ -112,7 +112,7 @@ export const createCheckoutPreference = async () => {
         headers: {
           "Content-Type": "application/json",
           Authorization:
-            "Bearer APP_USR-3207167079503487-041620-b517574017910c308f2e947d538c840c-287455919",
+            "Bearer APP_USR-885194856259295-051920-2459744c2182a7125b1ece56936bb055-45811820",
         },
         body: JSON.stringify({
           items: [
@@ -123,7 +123,7 @@ export const createCheckoutPreference = async () => {
               currency_id: "ARS", // Cambia a tu moneda
             },
           ],
-          plan_id: "2c938084963245b70196413ba7440903", // Especifica el ID del plan aquí
+          plan_id: "2c93808496d9dcdf0196e9bd071806ea", // Especifica el ID del plan aquí
           auto_return: "approved", // Opcional: Redirige automáticamente en caso de éxito
           back_urls: {
             success: "carica://payment/success", // Define un esquema de URL para tu app
@@ -152,7 +152,6 @@ export const createCheckoutPreference = async () => {
 };
 
 export const checkPaymentStatus = async (paymentId: string) => {
-  
   try {
     const response = await fetch(
       `https://api.mercadopago.com/v1/payments/${paymentId}`,
@@ -161,7 +160,7 @@ export const checkPaymentStatus = async (paymentId: string) => {
         headers: {
           "Content-Type": "application/json",
           Authorization:
-            "Bearer APP_USR-3207167079503487-041620-b517574017910c308f2e947d538c840c-287455919",
+            "Bearer APP_USR-885194856259295-051920-2459744c2182a7125b1ece56936bb055-45811820",
         },
       }
     );
