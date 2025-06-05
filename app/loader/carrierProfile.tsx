@@ -1,71 +1,232 @@
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native'
-import React, { useEffect, useLayoutEffect, useState } from 'react'
-import CustomHeader from '@/common/components/Header'
-import { useNavigation, useRouter } from 'expo-router'
-import ScreenLayout from '@/common/components/ScreenLayout';
-import { APPCOLORS } from '@/common/utils/colors';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { supabase } from '@/lib/supabase';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { DriverProfileModal } from '@/common/components/DriverProfileModal';
+import { View, Text, TouchableOpacity, StyleSheet, Image, Alert } from "react-native";
+import React, { useEffect, useLayoutEffect, useState } from "react";
+import CustomHeader from "@/common/components/Header";
+import { useNavigation, useRouter } from "expo-router";
+import ScreenLayout from "@/common/components/ScreenLayout";
+import { APPCOLORS } from "@/common/utils/colors";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { supabase } from "@/lib/supabase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { DriverProfileModal } from "@/common/components/DriverProfileModal";
 
 //TODO Cambiar por url de perfil de supabase
-const AVATAR_URL: string = 'https://plus.unsplash.com/premium_photo-1661811677567-6f14477aa1fa?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Z3JhbmphfGVufDB8fDB8fHww'
+const AVATAR_URL: string =
+  "https://plus.unsplash.com/premium_photo-1661811677567-6f14477aa1fa?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Z3JhbmphfGVufDB8fDB8fHww";
 export default function CarrierProfile() {
   const [openModal, setOpenModal] = useState(false);
   const [profile, setProfile] = useState<any>({});
   const router = useRouter();
   const logout = async () => {
-    await supabase.auth.signOut()
-    await router.replace('/auth/login')
-    await AsyncStorage.clear()
-  }
+    await supabase.auth.signOut();
+    await router.replace("/auth/login");
+    await AsyncStorage.clear();
+  };
   const toggleModal = () => {
-    console.log('Aqui');
-    setOpenModal(!openModal)
-  }
+    console.log("Aqui");
+    setOpenModal(!openModal);
+  };
   const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({
-      header: () => <CustomHeader hasBack={false} />
-    })
-    fetchProfile()
-  }, [])
+      header: () => <CustomHeader hasBack={false} />,
+    });
+    fetchProfile();
+  }, []);
 
+  const fetchProfile = async () => {
+    const user = await supabase.auth.getUser();
+    const { data: profileData, error: profileError } = await supabase
+      .from("usuarios")
+      .select("*")
+      .eq("id", user.data.user!.id)
+      .single();
+    setProfile(profileData);
+  };
+  const handleDeleteAccount = async () => {
+    // 1. Confirmación de seguridad
+    Alert.alert(
+      "Eliminar Cuenta",
+      "¿Estás seguro de que quieres eliminar tu cuenta? Esta acción es irreversible.",
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Eliminar",
+          onPress: async () => {
+            try {
+              // Obtener el usuario actualmente autenticado
+              const {
+                data: { user },
+              } = await supabase.auth.getUser();
 
-    const fetchProfile = async () => {
-      const user = await supabase.auth.getUser()
-      const { data: profileData, error: profileError } = await supabase.from('usuarios').select('*').eq('id', user.data.user!.id).single()
-      setProfile(profileData)
-    }
+              if (!user) {
+                Alert.alert("Error", "No hay usuario autenticado.");
+                return;
+              }
+
+              const userIdToDelete = user.id;
+              // Obtener el token de acceso actual (JWT) para autenticar la llamada a la Edge Function
+              const {
+                data: { session },
+              } = await supabase.auth.getSession();
+
+              if (!session?.access_token) {
+                Alert.alert(
+                  "Error",
+                  "No se pudo obtener la sesión. Por favor, vuelve a iniciar sesión."
+                );
+                return;
+              }
+
+              // Construir la URL de la Edge Function
+              const edgeFunctionUrl = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/functions/v1/delete-user`;
+              console.log("Edge Function URL:", edgeFunctionUrl);
+
+              const response = await fetch(edgeFunctionUrl, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${session.access_token}`, // Autenticar la solicitud con el JWT del usuario
+                },
+                body: JSON.stringify({ userIdToDelete: userIdToDelete }),
+              });
+
+              const data = await response.json();
+
+              if (!response.ok) {
+                // Si la respuesta no es OK (ej. status 4xx o 5xx)
+                console.error("Error al eliminar la cuenta:", data.error);
+                Alert.alert(
+                  "Error",
+                  `Fallo al eliminar la cuenta: ${
+                    data.error || "Error desconocido"
+                  }`
+                );
+                return;
+              }
+
+              // Si la eliminación fue exitosa
+              console.log("Cuenta eliminada exitosamente:", data.message);
+              Alert.alert("Éxito", "Tu cuenta ha sido eliminada.");
+
+              // Opcional: Cerrar la sesión del usuario en el cliente
+              await supabase.auth.signOut();
+
+              // Redirigir al usuario a la pantalla de inicio de sesión o bienvenida
+              router.replace("/auth/login"); // Usa router.replace para navegar al login
+            } catch (error) {
+              console.error("Error inesperado al eliminar la cuenta:", error);
+              Alert.alert(
+                "Error",
+                "Ocurrió un error inesperado al eliminar tu cuenta."
+              );
+            }
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  };
   return (
-    <View style={{ flex: 1, backgroundColor: 'white' }}>
+    <View style={{ flex: 1, backgroundColor: "white" }}>
       <ScreenLayout>
-        <ScreenHeader  onPress={toggleModal}/>
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginBottom: 90 }}>
+        <ScreenHeader onPress={toggleModal} />
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            marginBottom: 90,
+          }}
+        >
           <Avatar url={AVATAR_URL} />
-          <View style={{ marginTop: 20, justifyContent: 'center', alignItems: 'center' }}>
+          <View
+            style={{
+              marginTop: 20,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             {/* info de perfil */}
-            <Text style={{ fontSize: 20, color: APPCOLORS.primary, fontWeight: '600' }}> {profile?.nombre} {profile?.apellido} </Text>
-            <Text style={{ fontSize: 15, color: APPCOLORS.darkGray, fontWeight: '400' }}> Telefono: {profile?.telefono} </Text>
-            <Text style={{ fontSize: 15, color: APPCOLORS.darkGray, fontWeight: '400' }}> Correo: {profile?.correo} </Text>
-            <Text style={{ fontSize: 15, color: APPCOLORS.darkGray, fontWeight: '400' }}> DNI: {profile.dni} </Text>
-
+            <Text
+              style={{
+                fontSize: 20,
+                color: APPCOLORS.primary,
+                fontWeight: "600",
+              }}
+            >
+              {" "}
+              {profile?.nombre} {profile?.apellido}{" "}
+            </Text>
+            <Text
+              style={{
+                fontSize: 15,
+                color: APPCOLORS.darkGray,
+                fontWeight: "400",
+              }}
+            >
+              {" "}
+              Telefono: {profile?.telefono}{" "}
+            </Text>
+            <Text
+              style={{
+                fontSize: 15,
+                color: APPCOLORS.darkGray,
+                fontWeight: "400",
+              }}
+            >
+              {" "}
+              Correo: {profile?.correo}{" "}
+            </Text>
+            <Text
+              style={{
+                fontSize: 15,
+                color: APPCOLORS.darkGray,
+                fontWeight: "400",
+              }}
+            >
+              {" "}
+              DNI: {profile.dni}{" "}
+            </Text>
           </View>
-          <View style={{ width: '100%', position: 'absolute', bottom: 0 }}>
+          <View style={{ width: "100%", position: "absolute", bottom: 0 }}>
             <TouchableOpacity
               onPress={logout}
-              style={{ borderRadius: 30, backgroundColor: 'red', width: '100%', height: 50, justifyContent: 'center', alignItems: 'center' }}>
-              <Text style={{ color: 'white', fontWeight: '600' }}>Cerrar Sesión</Text>
+              style={{
+                borderRadius: 30,
+                backgroundColor: "red",
+                width: "100%",
+                height: 50,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text style={{ color: "white", fontWeight: "600" }}>
+                Cerrar Sesión
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleDeleteAccount}
+              style={{
+                marginTop: 10,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text style={{ color: "red" }}>Eliminar cuenta</Text>
             </TouchableOpacity>
           </View>
-
         </View>
       </ScreenLayout>
-        <DriverProfileModal openModal={openModal} toggleModal={toggleModal} user={profile} />
-      
+      <DriverProfileModal
+        openModal={openModal}
+        toggleModal={toggleModal}
+        user={profile}
+      />
     </View>
-  )
+  );
 }
 
 const ScreenHeader = ({ onPress }: { onPress: () => void }) => {
@@ -76,60 +237,74 @@ const ScreenHeader = ({ onPress }: { onPress: () => void }) => {
         <Text style={styles.screenSubtitle}>Tus Datos:</Text>
       </View>
       <View>
-        <TouchableOpacity onPress={ () => onPress() } style={styles.filterBtn}>
+        <TouchableOpacity onPress={() => onPress()} style={styles.filterBtn}>
           <Text style={styles.filterBtnTitle}>Editar:</Text>
         </TouchableOpacity>
       </View>
     </View>
-  )
-}
+  );
+};
 
 const Avatar = ({ url }: { url: string }) => {
   return (
-    <View style={{ width: 110, height: 110, borderRadius: 100, backgroundColor: 'white', borderColor: APPCOLORS.secondary, borderWidth: 6, overflow: 'hidden' }}>
-      <Image source={{ uri: url }} width={100} height={100} resizeMode='cover' />
+    <View
+      style={{
+        width: 110,
+        height: 110,
+        borderRadius: 100,
+        backgroundColor: "white",
+        borderColor: APPCOLORS.secondary,
+        borderWidth: 6,
+        overflow: "hidden",
+      }}
+    >
+      <Image
+        source={{ uri: url }}
+        width={100}
+        height={100}
+        resizeMode="cover"
+      />
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   screenTitleContainer: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     paddingHorizontal: 15,
-    width: '100%',
+    width: "100%",
     height: 50,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'center'
-
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
   },
   screenTitle: {
     fontSize: 20,
     color: APPCOLORS.textBlue,
-    fontWeight: 'bold'
+    fontWeight: "bold",
   },
   screenSubtitle: {
     fontSize: 14,
     color: APPCOLORS.textGray,
-    fontWeight: '600'
+    fontWeight: "600",
   },
   filterBtn: {
     width: 90,
     height: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: APPCOLORS.primary,
     borderRadius: 12,
-    alignContent: 'center',
+    alignContent: "center",
     marginTop: 10,
     marginLeft: 20,
-    alignSelf: 'flex-end'
+    alignSelf: "flex-end",
   },
   filterBtnTitle: {
     fontSize: 14,
     color: APPCOLORS.textWhite,
-    fontWeight: 'bold'
+    fontWeight: "bold",
   },
-})
+});
