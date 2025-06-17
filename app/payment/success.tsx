@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { APPCOLORS } from "@/common/utils/colors";
@@ -23,11 +23,22 @@ const SuccessPaymentScreen = () => {
 
   const update = async () => {
     console.log("payment_id", payment_id);
-    if (payment_id) {
-      const user = await supabase.auth.getUser();
-      console.log("user", user.data.user!.id);
-      await updateSubscription(user.data.user!.id, true, payment_id as string);
-      dispatch(setSubscritionInfo(true))
+    try {
+      if (payment_id) {
+        const user = await supabase.auth.getUser();
+        console.log("user", user.data.user!.id);
+        await updateSubscription(
+          user.data.user!.id,
+          true,
+          payment_id as string
+        );
+        dispatch(setSubscritionInfo(true));
+      }
+    } catch (error: any) {
+      Alert.alert(
+        "Error",
+        error.toString() || "Error al actualizar la suscripción"
+      );
     }
   };
 

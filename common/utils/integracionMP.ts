@@ -112,7 +112,7 @@ export const createCheckoutPreference = async () => {
         headers: {
           "Content-Type": "application/json",
           Authorization:
-            "Bearer APP_USR-885194856259295-051920-2459744c2182a7125b1ece56936bb055-45811820",
+            `Bearer ${process.env.EXPO_PUBLIC_MP}`, // Asegúrate de definir tu token de acceso en las variables de entorno
         },
         body: JSON.stringify({
           items: [
@@ -123,12 +123,12 @@ export const createCheckoutPreference = async () => {
               currency_id: "ARS", // Cambia a tu moneda
             },
           ],
-          plan_id: "2c93808496d9dcdf0196e9bd071806ea", // Especifica el ID del plan aquí
+          plan_id: process.env.EXPO_PUBLIC_PLAN_ID, // Especifica el ID del plan aquí
           auto_return: "approved", // Opcional: Redirige automáticamente en caso de éxito
           back_urls: {
             success: "carica://payment/success", // Define un esquema de URL para tu app
             failure: "carica://payment/failure",
-            pending: "carica://payment/pending",
+            pending: "carica://payment/success",
           },
         }),
       }
@@ -160,7 +160,7 @@ export const checkPaymentStatus = async (paymentId: string) => {
         headers: {
           "Content-Type": "application/json",
           Authorization:
-            "Bearer APP_USR-885194856259295-051920-2459744c2182a7125b1ece56936bb055-45811820",
+            `Bearer ${process.env.EXPO_PUBLIC_MP}`,
         },
       }
     );

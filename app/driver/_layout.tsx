@@ -16,6 +16,7 @@ export default function DriverTabs() {
       const { data, error } = await supabase.auth.getSession();
       const userID = data.session?.user?.id ?? "";
       const result = await checkSubscription(userID);
+      
       if (result) {
         dispatch(setSubscritionInfo(result));
       }
